@@ -56,6 +56,11 @@ button, .button {
             text-align: center;
         } 
 
+        .bar-container a:hover {
+            transform: scale(1.1);
+        }
+
+
     .logo-container {
         display: flex;
         justify-content: center;
@@ -120,6 +125,7 @@ button, .button {
         font-size: 1.2em;
     }
 
+/*who we are... secction*/
 
 .qs-section {
     display: relative;
@@ -203,7 +209,18 @@ button, .button {
                 .img-grid-1 img, .img-grid-2 img {
                     height: 100%;
                 }
-            
+        
+/* Who we are section profile buttons*/
+
+.profbutt:hover {
+    box-shadow: 0 10px 10px 0 rgba(0,0,0,0.24);
+    transform: scale(1.05);
+}
+
+
+
+/*newsletter secction*/
+                
     .newsletter {
         background-color: var(--piel);
         height: 120px;
