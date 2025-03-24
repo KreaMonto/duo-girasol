@@ -1,0 +1,215 @@
+---
+// Obtener todas las imágenes de la galería
+const galleryImages = await Astro.glob('/public/gallery/*').catch(() => []);
+
+interface ImageInfo {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+}
+
+// Función para obtener las dimensiones de la imagen
+function getImageDimensions(path: string): Promise<{ width: number; height: number }> {
+
+    return Promise.resolve({ width: 800, height: 600 });
+}
+
+---
+
+<section id="galeria" class="gallery-section">
+    <div class="container">
+        <h2 class="section-title">Galería</h2>
+        
+        <div class="gallery-grid">
+            {galleryImages.map((image, index) => (
+                <div class="gallery-item" data-image={image.src}>
+                    <img 
+                        src={`/gallery/${image.src}`}
+                        alt={`Dúo Girasol - Imagen ${index + 1}`}
+                        loading="lazy"
+                        class="gallery-image"
+                    />
+                </div>
+            ))}
+        </div>
+    </div>
+
+    <!-- Modal para vista ampliada -->
+    <div id="gallery-modal" class="modal">
+        <button class="modal-close" aria-label="Cerrar galería">×</button>
+        <img id="modal-image" src="" alt="" />
+        <button class="modal-nav prev" aria-label="Imagen anterior">❮</button>
+        <button class="modal-nav next" aria-label="Imagen siguiente">❯</button>
+    </div>
+</section>
+
+<style>
+    .gallery-section {
+        padding: var(--spacing-4xl) 0;
+        background: var(--bg-primary);
+    }
+
+    .container {
+        max-width: var(--desktop);
+        margin: 0 auto;
+        padding: 0 var(--spacing-md);
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--spacing-md);
+        padding: var(--spacing-xl) 0;
+    }
+
+    .gallery-item {
+        position: relative;
+        aspect-ratio: 1;
+        overflow: hidden;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover {
+        transform: scale(1.02);
+    }
+
+    .gallery-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover .gallery-image {
+        transform: scale(1.1);
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal.active {
+        display: flex;
+    }
+
+    .modal img {
+        max-width: 90%;
+        max-height: 90vh;
+        object-fit: contain;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 40px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    .modal-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 24px;
+        transition: background-color 0.3s ease;
+    }
+
+    .modal-nav:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-nav.prev {
+        left: 20px;
+    }
+
+    .modal-nav.next {
+        right: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .gallery-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: var(--spacing-sm);
+        }
+
+        .modal-nav {
+            padding: 15px;
+            font-size: 20px;
+        }
+    }
+</style>
+
+<script>
+    let currentImageIndex = 0;
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const modal = document.getElementById('gallery-modal');
+    const modalImage = document.getElementById('modal-image') as HTMLImageElement;
+
+    function openModal(index: number) {
+        currentImageIndex = index;
+        const imageSrc = galleryItems[index].getAttribute('data-image');
+        if (modal && modalImage && imageSrc) {
+            modalImage.src = `/gallery/${imageSrc}`;
+            modalImage.alt = `Dúo Girasol - Imagen ${index + 1}`;
+            modal.classList.add('active');
+        }
+    }
+
+    function closeModal() {
+        if (modal) {
+            modal.classList.remove('active');
+        }
+    }
+
+    function navigateGallery(direction: 'prev' | 'next') {
+        if (direction === 'prev') {
+            currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+        } else {
+            currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+        }
+        openModal(currentImageIndex);
+    }
+
+    // Event Listeners
+    galleryItems.forEach((item, index) => {
+        item.addEventListener('click', () => openModal(index));
+    });
+
+    document.querySelector('.modal-close')?.addEventListener('click', closeModal);
+    document.querySelector('.modal-nav.prev')?.addEventListener('click', () => navigateGallery('prev'));
+    document.querySelector('.modal-nav.next')?.addEventListener('click', () => navigateGallery('next'));
+
+    // Cerrar modal con tecla Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'ArrowLeft') navigateGallery('prev');
+        if (e.key === 'ArrowRight') navigateGallery('next');
+    });
+
+    // Cerrar modal al hacer clic fuera de la imagen
+    modal?.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+</script>

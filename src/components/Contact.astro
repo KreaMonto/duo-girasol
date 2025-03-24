@@ -1,0 +1,257 @@
+---
+interface ContactInfo {
+    name: string;
+    phones: string[];
+    email: string;
+}
+
+const contacts: ContactInfo[] = [
+    {
+        name: "Dúo Girasol",
+        phones: ["312-842-8275", "318-369-8022"],
+        email: "gerencia@duo-girasol.com"
+    }
+];
+
+function obscureEmail(email: string) {
+    return email.replace(/./g, '*').slice(0, -3) + email.slice(-3);
+}
+
+function obscurePhone(phone: string) {
+    return phone.replace(/\d(?=\d{2})/g, '*');
+}
+---
+
+<section id="contacto" class="contact-section">
+    <div class="container">
+        <h2 class="section-title">Contacto</h2>
+
+        <div class="contact-grid">
+            <!-- Formulario de Contacto -->
+            <div class="contact-form">
+                <h3>Envíanos un mensaje</h3>
+                <form id="contactForm" action="https://formspree.io/f/tu-form-id" method="POST">
+                    <div class="form-group">
+                        <label for="name">Nombre</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Mensaje</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-button">Enviar mensaje</button>
+                </form>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="contact-info">
+                {contacts.map(contact => (
+                    <div class="contact-card">
+                        <h3>Información de Contacto</h3>
+                        <div class="contact-details" data-contact-container>
+                            <div class="contact-items">
+                                <div class="phones">
+                                    {contact.phones.map(phone => (
+                                        <p class="protected-contact" data-phone={phone}>
+                                            {obscurePhone(phone)}
+                                        </p>
+                                    ))}
+                                </div>
+                                <p class="protected-contact" data-email={contact.email}>
+                                    {obscureEmail(contact.email)}
+                                </p>
+                            </div>
+                            <button class="reveal-btn" aria-label="Mostrar información de contacto">
+                                <span class="icon">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .contact-section {
+        padding: var(--spacing-4xl) 0;
+        background: var(--gradient-primary);
+    }
+
+    .container {
+        max-width: var(--desktop);
+        margin: 0 auto;
+        padding: 0 var(--spacing-md);
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-xl);
+    }
+
+    .contact-form, .contact-card {
+        background: var(--bg-primary);
+        padding: var(--spacing-xl);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px var(--shadow-color);
+    }
+
+    .contact-card h3 {
+        color: var(--sunflower-dark);
+        margin-bottom: var(--spacing-lg);
+        font-size: var(--text-xl);
+        text-align: center;
+    }
+
+    .contact-details {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg-secondary);
+        padding: var(--spacing-md);
+        border-radius: 8px;
+        gap: var(--spacing-md);
+    }
+
+    .contact-items {
+        flex-grow: 1;
+    }
+
+    .phones {
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .phones-container, .email-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .phones {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-xs); /* Reducimos el espacio entre teléfonos */
+    }
+
+    .phones-container {
+        margin-bottom: var(--spacing-md); /* Añadimos espacio después del contenedor de teléfonos */
+    }
+
+    .protected-contact {
+        color: var(--text-secondary);
+        font-family: monospace;
+        letter-spacing: 1px;
+        margin: 0;
+        padding: var(--spacing-xs) 0;
+    }
+
+    .reveal-btn {
+        background: none;
+        border: none;
+        padding: var(--spacing-sm);
+        cursor: pointer;
+        opacity: 0.6;
+        transition: all 0.2s ease;
+        align-self: center;
+    }
+
+    .reveal-btn:hover {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    .reveal-btn .icon {
+        font-size: var(--text-lg);
+        color: var(--text-secondary);
+    }
+
+    .form-group {
+        margin-bottom: var(--spacing-md);
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: var(--spacing-xs);
+        color: var(--text-primary);
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: var(--spacing-sm);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background: var(--bg-secondary);
+    }
+
+    .form-group textarea {
+        height: 150px;
+        resize: vertical;
+    }
+
+    .submit-button {
+        background: var(--sunflower-brown);
+        color: white;
+        padding: var(--spacing-sm) var(--spacing-lg);
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 100%;
+    }
+
+    .submit-button:hover {
+        background: var(--sunflower-dark);
+    }
+
+    @media (max-width: 768px) {
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-card {
+            margin-top: var(--spacing-lg);
+        }
+    }
+</style>
+
+<script>
+    function setupProtectedInfo() {
+        document.querySelectorAll('[data-contact-container]').forEach(container => {
+            const btn = container.querySelector('.reveal-btn');
+            const phoneElements = container.querySelectorAll('[data-phone]');
+            const emailElement = container.querySelector('[data-email]');
+            
+            btn?.addEventListener('click', () => {
+                // Revelar teléfonos
+                phoneElements.forEach(element => {
+                    const phoneNumber = element.getAttribute('data-phone');
+                    if (phoneNumber) {
+                        element.textContent = phoneNumber;
+                    }
+                });
+
+                // Revelar email
+                const email = emailElement?.getAttribute('data-email');
+                if (email && emailElement) {
+                    emailElement.textContent = email;
+                }
+
+                // Ocultar botón
+                if (btn) (btn as HTMLButtonElement).style.display = 'none';
+            });
+        });
+    }
+
+    // Inicializar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', setupProtectedInfo);
+</script>
+
+
+
+

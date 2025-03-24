@@ -1,0 +1,182 @@
+---
+interface MusicianProfile {
+    name: string;
+    highlights: string[];
+    description: string;
+}
+
+const musicians: MusicianProfile[] = [
+    {
+        name: "Adriana Granada",
+        highlights: [
+            "Ganadora de importantes festivales musicales a nivel nacional",
+            "Artista exclusiva de Discos Victoria por más de cinco años",
+            "Ex-integrante de la Orquesta Sonora Dinamita (dir. Fruko)",
+            "Miembro del grupo Son Bolero de la Orquesta Combo DILIDO",
+            "Integrante del Dueto Nana y Juan"
+        ],
+        description: "Artista con sólida formación y reconocimiento nacional, posee un extenso historial discográfico colaborando con grandes exponentes de la música popular."
+    },
+    {
+        name: "León Darío Rojas Restrepo",
+        highlights: [
+            "Exintegrante del Dueto Semillas",
+            "Ex-director musical de Berlinda Gil",
+            "Premiado como mejor intérprete del tiple en el Festival Mono Nuñez",
+            "Ganador en el Concurso Nacional del Bambuco en Pereira",
+            "Jurado en diversos concursos nacionales"
+        ],
+        description: "Músico multifacético reconocido por su dominio de la música andina colombiana, destacándose como arreglista, director, asesor y productor musical."
+    }
+];
+---
+
+<section id="quienessomos" class="about-section">
+    <div class="container">
+        <h2 class="section-title">Acerca de Dúo Girasol</h2>
+        
+        <div class="intro-text">
+            <p>
+                Dúo Girasol es un proyecto musical profesional con sede en Medellín, Colombia, 
+                que se distingue por su enfoque en la música andina y popular colombiana.
+            </p>
+        </div>
+
+        <div class="musicians-grid">
+            {musicians.map(musician => (
+                <div class="musician-card">
+                    <h3>{musician.name}</h3>
+                    <p class="musician-description">{musician.description}</p>
+                    <ul class="highlights-list">
+                        {musician.highlights.map(highlight => (
+                            <li>{highlight}</li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+        </div>
+
+        <div class="musical-proposal">
+            <h3>Nuestra Propuesta Musical</h3>
+            <p>
+                Juntos, Adriana y León Darío combinan experiencia, pasión y técnica para 
+                ofrecer interpretaciones que conectan profundamente con su audiencia. 
+                Dúo Girasol se presenta en reuniones sociales, eventos culturales y actos 
+                religiosos, llevando consigo la esencia de la música andina y popular 
+                colombiana, reinterpretada con un toque fresco y profesional.
+            </p>
+        </div>
+    </div>
+</section>
+
+<style>
+    .about-section {
+        /* Aumentamos el padding superior e inferior */
+        padding: var(--spacing-4xl) 0;
+        background: var(--gradient-secondary);
+        /* Agregamos margen superior para separar del Hero */
+        margin-top: var(--spacing-4xl);
+    }
+
+    /* Agregamos una nueva variable de spacing para espacios más grandes */
+    :root {
+        --spacing-4xl: 4rem;
+    }
+
+    .container {
+        max-width: var(--desktop);
+        margin: 0 auto;
+        padding: 0 var(--spacing-md);
+    }
+
+    .section-title {
+        text-align: center;
+        font-size: var(--text-3xl);
+        color: var(--text-primary);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .intro-text {
+        max-width: 800px;
+        margin: 0 auto var(--spacing-xl);
+        text-align: center;
+        font-size: var(--text-lg);
+        color: var(--text-secondary);
+    }
+
+    .musicians-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--spacing-xl);
+        margin-bottom: var(--spacing-2xl);
+    }
+
+    .musician-card {
+        background: var(--bg-primary);
+        padding: var(--spacing-lg);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px var(--shadow-color);
+        transition: transform 0.3s ease;
+    }
+
+    .musician-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .musician-card h3 {
+        color: var(--sunflower-dark);
+        font-size: var(--text-xl);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .musician-description {
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .highlights-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .highlights-list li {
+        padding: var(--spacing-xs) 0;
+        color: var(--text-primary);
+        position: relative;
+        padding-left: var(--spacing-md);
+    }
+
+    .highlights-list li::before {
+        content: "•";
+        color: var(--sunflower-yellow);
+        position: absolute;
+        left: 0;
+    }
+
+    .musical-proposal {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        padding: var(--spacing-xl) 0;
+    }
+
+    .musical-proposal h3 {
+        color: var(--sunflower-dark);
+        font-size: var(--text-xl);
+        margin-bottom: var(--spacing-md);
+    }
+
+    @media (max-width: 768px) {
+        .about-section {
+            padding: var(--spacing-xl) 0;
+        }
+
+        .musicians-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .musician-card {
+            padding: var(--spacing-md);
+        }
+    }
+</style>

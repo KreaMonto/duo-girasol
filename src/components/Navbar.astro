@@ -1,0 +1,385 @@
+---
+import Logo from './Logo.astro';
+
+interface NavItem {
+    href: string;
+    text: string;
+}
+
+const navItems: NavItem[] = [
+    { href: "#quienessomos", text: "Quiénes Somos" },
+    { href: "#galeria", text: "Galería" },
+    { href: "#discografia", text: "Discografía" },
+    { href: "#contacto", text: "Contacto" }
+];
+---
+
+
+<nav class="navbar nav-hidden">
+    <div class="nav-peek"></div>
+    <div class="nav-content">
+        <Logo className="navbar-logo" />
+        
+        <div class="nav-links">
+            {navItems.map(item => (
+                <a href={item.href} class="nav-link">
+                    <span class="nav-text">{item.text}</span>
+                    <span class="nav-line"></span>
+                </a>
+            ))}
+        </div>
+
+        <button id="mobile-menu-button" class="mobile-menu-button" aria-label="Menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+    <div class="mobile-menu" id="mobile-menu">
+        {navItems.map(item => (
+            <a href={item.href} class="mobile-link">{item.text}</a>
+        ))}
+    </div>
+</nav>
+
+
+<style>
+    .nav-peek {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 170px; /* Ancho del logo */
+        height: 15px; /* Altura de la "puntica" visible */
+        background: var(--sunflower-brown);
+        border-radius: 0 0 15px 15px;
+        z-index: 999;
+        cursor: pointer;
+    }
+
+    .navbar {
+        position: fixed;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        background: rgba(var(--bg-primary), 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .navbar.nav-visible {
+        transform: translateY(100%);
+    }
+
+    /* Estilo especial cuando está sobre la imagen del hero */
+    .navbar.over-hero {
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .navbar.over-hero .nav-text {
+        color: #FFFFFF;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .navbar.over-hero .nav-link:hover .nav-text {
+        color: var(--sunflower-yellow);
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Excluir el logo de los estilos del navbar */
+    .navbar-logo {
+        z-index: 2;
+    }
+
+    .navbar.nav-hidden {
+        transform: translateY(-100%);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+
+    .navbar.nav-hidden .nav-links,
+    .navbar.nav-hidden .mobile-menu-button {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    .navbar.nav-hidden .logo-container {
+        transform: scale(0.8);
+    }
+
+    .nav-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: var(--desktop);
+        margin: 0 auto;
+        padding: 0 var(--spacing-md);
+        height: 70px;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: var(--spacing-xl);
+        margin-left: auto;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        transition: all 0.3s ease;
+    }
+
+    .nav-text {
+        color: var(--text-primary);
+        font-size: var(--text-base);
+        font-weight: 600; /* Aumentado el peso de la fuente */
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.2); /* Sutil sombra para mejor legibilidad */
+    }
+
+    .nav-line {
+        position: absolute;
+        bottom: -2px;
+        width: 0;
+        height: 2px;
+        background: var(--gradient-primary);
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover .nav-line {
+        width: 100%;
+    }
+
+    .nav-link:hover .nav-text {
+        color: var(--sunflower-dark);
+        text-shadow: 1px 1px 3px rgba(255, 215, 0, 0.3); /* Sombra dorada al hover */
+    }
+
+    .mobile-menu-button {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        background: transparent;
+        border: none;
+        padding: var(--spacing-xs);
+        cursor: pointer;
+    }
+
+    .mobile-menu-button span {
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: var(--text-primary);
+        transition: all 0.3s ease;
+    }
+
+    .mobile-menu-button.active span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .mobile-menu-button.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-button.active span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .mobile-menu {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: rgba(var(--bg-primary), 0.8); /* Fondo semi-transparente */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        padding: var(--spacing-md);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-link {
+        display: block;
+        padding: var(--spacing-md);
+        text-align: center;
+        color: var(--text-primary);
+        font-size: var(--text-lg);
+        font-weight: 600; /* Aumentado el peso de la fuente */
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-link:last-child {
+        border-bottom: none;
+    }
+
+    .mobile-link:hover {
+        background: var(--bg-secondary);
+        color: var(--sunflower-dark);
+        text-shadow: 1px 1px 3px rgba(255, 215, 0, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+        }
+
+        .mobile-menu-button {
+            display: flex;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        .nav-content {
+            height: 60px;
+        }
+
+        .navbar.over-hero .mobile-link {
+            color: #FFFFFF;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .navbar.over-hero .mobile-menu {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-peek {
+            width: 140px; /* Ajustar al tamaño móvil del logo */
+        }
+    }
+</style>
+
+
+<script>
+    let hideTimeout: number;
+    const navbar = document.querySelector('.navbar');
+    const navPeek = document.querySelector('.nav-peek');
+    const HIDE_DELAY = 4000; // 4 segundos
+    let lastScroll = 0;
+    const delta = 5;
+    const navbarHeight = (navbar as HTMLElement)?.offsetHeight || 0;
+
+    function showNavbar() {
+        navbar?.classList.add('nav-visible');
+        navbar?.classList.remove('nav-hidden');
+        clearTimeout(hideTimeout);
+    }
+
+    function hideNavbar() {
+        navbar?.classList.remove('nav-visible');
+        navbar?.classList.add('nav-hidden');
+    }
+
+    function scheduleHideNavbar() {
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(() => {
+            if (!navbar?.matches(':hover')) {
+                hideNavbar();
+            }
+        }, HIDE_DELAY);
+    }
+
+    // Mostrar navbar al hacer hover en la puntica
+    navPeek?.addEventListener('mouseenter', showNavbar);
+
+    // Mostrar navbar al hacer hover en la barra completa
+    navbar?.addEventListener('mouseenter', showNavbar);
+
+    // Programar ocultamiento al salir del navbar
+    navbar?.addEventListener('mouseleave', scheduleHideNavbar);
+
+    // Smooth scroll para los enlaces del navbar
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e: Event) {
+            e.preventDefault();
+            const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href');
+            if (href) {
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Si estamos en móvil, cerrar el menú
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const mobileMenuButton = document.getElementById('mobile-menu-button');
+                    mobileMenu?.classList.remove('active');
+                    mobileMenuButton?.classList.remove('active');
+                }
+            }
+        });
+    });
+
+    function updateNavbarStyle() {
+        if (!navbar) return;
+        const hero = document.querySelector('.hero');
+        if (!hero) return;
+        
+        const heroBottom = hero.getBoundingClientRect().bottom;
+        const isOverHero = heroBottom > 0;
+        
+        navbar.classList.toggle('over-hero', isOverHero);
+    }
+
+    function hasScrolled() {
+        const st = window.scrollY;
+
+        if (Math.abs(lastScroll - st) <= delta) return;
+
+        // Si el scroll va hacia abajo y estamos más allá del navbar
+        if (st > lastScroll && st > navbarHeight) {
+            hideNavbar();
+        } else {
+            // Si el scroll va hacia arriba o estamos en la parte superior
+            showNavbar();
+        }
+
+        updateNavbarStyle();
+        lastScroll = st;
+    }
+
+    // Throttle para el scroll
+    let ticking = false;
+    document.addEventListener('scroll', () => {
+        if (!ticking) {
+            window.requestAnimationFrame(() => {
+                hasScrolled();
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // Ejecutar al cargar la página
+    updateNavbarStyle();
+
+    // Mobile menu
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    mobileMenuButton?.addEventListener('click', () => {
+        mobileMenu?.classList.toggle('active');
+        mobileMenuButton.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.mobile-link').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu?.classList.remove('active');
+            mobileMenuButton?.classList.remove('active');
+        });
+    });
+</script>
+

@@ -1,0 +1,97 @@
+---
+interface Props {
+    className?: string;
+}
+
+const { className = '' } = Astro.props;
+---
+
+<div class={`logo-container ${className}`}>
+    <span id="logo-titulo" class="titulo">
+        <span class="duo">Dúo</span>
+        <span class="girasol">Girasol</span>
+        <div class="sunflower-accent"></div>
+    </span>
+</div>
+
+<style>
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem 1.5rem;
+        transition: transform 0.3s ease;
+        background-color: var(--sunflower-brown); !important
+        border-radius: 0 0 15px 15px; 
+        height: 90px; 
+        min-width: 170px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo-container:hover {
+        transform: scale(1.02);
+    }
+
+    .titulo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        line-height: 1;
+        position: relative;
+    }
+
+    .duo {
+        font-family: 'Poppins', sans-serif;
+        font-size: var(--text-sm);
+        font-weight: 300;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #FFFFFF; /* Cambiado a blanco para contraste */
+        margin-bottom: 0.2rem;
+        opacity: 0.9;
+    }
+
+    .girasol {
+        font-family: 'Poppins', sans-serif;
+        font-size: var(--text-2xl);
+        letter-spacing: 5px;
+        color: var(--sunflower-yellow); 
+        position: relative;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); 
+    }
+
+    .sunflower-accent {
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 2px;
+        background: var(--sunflower-yellow); 
+        border-radius: 2px;
+    }
+
+    @media (max-width: 768px) {
+        .logo-container {
+            padding: 0.3rem 1rem;
+            min-width: 140px; /* Ajustado para móvil */
+            height: 60px; /* Ajustado para móvil */
+        }
+
+        .duo {
+            font-size: var(--text-xs);
+            letter-spacing: 3px;
+        }
+
+        .girasol {
+            font-size: var(--text-xl);
+        }
+
+        .sunflower-accent {
+            width: 20px;
+        }
+    }
+</style>
+
+
+
