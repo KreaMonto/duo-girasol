@@ -1,0 +1,312 @@
+---
+// Import fonts in the component itself since we're using Astro
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Dúo Girasol - Página Oficial</title>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style is:global>
+
+	/* CSS Variables */
+	:root {
+		/* Nueva paleta de colores principal */
+		--sunflower-yellow: #FFD700;     /* Amarillo brillante del girasol */
+		--sunflower-dark: #FFA500;       /* Naranja dorado para profundidad */
+		--sunflower-brown: #654321;      /* Marrón del centro del girasol */
+		--leaf-green: #228B22;           /* Verde para acentos */
+		
+		/* Colores de fondo y texto */
+		--bg-primary: 255, 250, 240;     /* Fondo principal crema suave */
+		--bg-secondary: #FFF8DC;         /* Fondo secundario amarillo muy claro */
+		--text-primary: #2C1810;         /* Texto principal marrón oscuro */
+		--text-secondary: #5C4033;       /* Texto secundario marrón medio */
+		
+		/* Acentos y estados */
+		--accent-primary: #FFB347;       /* Acento principal naranja melocotón */
+		--accent-secondary: #98FB98;     /* Acento secundario verde claro */
+		--hover-primary: #FFA533;        /* Color hover principal */
+		--hover-secondary: #90EE90;      /* Color hover secundario */
+		
+		/* Sombras y superposiciones */
+		--shadow-color: rgba(0, 0, 0, 0.1);
+		--overlay-light: rgba(255, 255, 255, 0.9);
+		--overlay-dark: rgba(44, 24, 16, 0.8);
+
+		/* Gradientes */
+		--gradient-primary: linear-gradient(135deg, var(--sunflower-yellow) 0%, var(--sunflower-dark) 100%);
+		--gradient-secondary: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+
+		/* Los breakpoints y spacing se mantienen igual */
+		--mobile: 480px;
+		--tablet: 768px;
+		--laptop: 1024px;
+		--desktop: 1200px;
+
+		--spacing-xs: 0.25rem;
+		--spacing-sm: 0.5rem;
+		--spacing-md: 1rem;
+		--spacing-lg: 1.5rem;
+		--spacing-xl: 2rem;
+
+		/* Actualizamos los tamaños de fuente para un aspecto más moderno */
+		--text-xs: 0.75rem;
+		--text-sm: 0.875rem;
+		--text-base: 1rem;
+		--text-lg: 1.25rem;
+		--text-xl: 1.5rem;
+		--text-2xl: 2rem;
+		--text-3xl: 2.5rem;
+		--text-4xl: 3rem;
+	}
+
+	/* Actualizamos los estilos base */
+	* {
+		font-family: 'Poppins', sans-serif;
+		color: var(--text-primary);
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	body {
+		background: var(--bg-primary);
+		width: 100%;
+		min-height: 100vh;
+		overflow-x: hidden;
+	}
+
+	/* Typography */
+	h1, h2, h3, h4, h5, h6 {
+		line-height: 1.2;
+		margin-bottom: var(--spacing-md);
+	}
+
+	p {
+		line-height: 1.5;
+		margin-bottom: var(--spacing-md);
+	}
+
+	/* Global element styles */
+	img {
+		max-width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	a {
+		text-decoration: none;
+		color: var(--text-primary);
+		transition: all 0.3s ease;
+	}
+
+	button, .button {
+		background: var(--gradient-primary);
+		color: var(--bg-primary);
+		padding: var(--spacing-sm) var(--spacing-lg);
+		border-radius: 8px;
+		border: none;
+		cursor: pointer;
+		transition: all 0.3s ease;
+		box-shadow: 0 2px 4px var(--shadow-color);
+	}
+
+	button:hover, .button:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 8px var(--shadow-color);
+	}
+
+	/* Custom classes */
+	#logo-titulo {
+		font-family: 'Satisfy', cursive, sans-serif;
+	}
+
+	.sections {
+		display: flex;
+		width: 100%;
+		height: auto;
+		padding: var(--spacing-md);
+	}
+
+	/* Navigation */
+	.bar-container {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: var(--amarillo);
+		width: 100%;
+		height: 50px;
+		z-index: 100;
+		padding: 0 var(--spacing-md);
+	}
+
+	.bar-container a {
+		margin: auto 7%;
+		font-size: var(--text-lg);
+		width: auto;
+		text-align: center;
+	}
+
+	.bar-container a:hover {
+		transform: scale(1.1);
+	}
+
+	.logo-container {
+		display: flex;
+		justify-content: center;
+		background-color: var(--cafe-oscuro);
+		position: relative;
+		height: 70px;
+		width: 170px;
+		border-radius: 0 0 15px 15px;
+	}
+
+	.titulo {
+		display: inline-flex;
+		text-align: center;
+		margin: auto;
+		color: var(--blanco);
+		font-size: var(--text-xl);
+	}
+
+	/* Container class for consistent spacing */
+	.container {
+		width: 100%;
+		max-width: var(--desktop);
+		margin: 0 auto;
+		padding: 0 var(--spacing-md);
+	}
+
+	/* Grid system */
+	.grid {
+		display: grid;
+		gap: var(--spacing-md);
+		grid-template-columns: repeat(12, 1fr);
+	}
+
+	/* Responsive Typography */
+	@media (max-width: 768px) {
+		:root {
+			--text-base: 0.875rem;
+			--text-lg: 1rem;
+			--text-xl: 1.125rem;
+			--text-2xl: 1.25rem;
+			--text-3xl: 1.5rem;
+		}
+	}
+
+	/* Responsive Layout */
+	@media (max-width: 1024px) {
+		.container {
+			max-width: 100%;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.bar-container {
+			flex-direction: column;
+			height: auto;
+			padding: var(--spacing-sm);
+		}
+
+		.bar-container a {
+			margin: var(--spacing-xs) 0;
+			width: 100%;
+		}
+
+		.logo-container {
+			width: 100%;
+			border-radius: 0;
+		}
+
+		.sections {
+			flex-direction: column;
+			padding: var(--spacing-sm);
+		}
+
+		.grid {
+			grid-template-columns: repeat(4, 1fr);
+		}
+	}
+
+	@media (max-width: 480px) {
+		.grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		.sections {
+			padding: var(--spacing-xs);
+		}
+	}
+
+	/* Utility classes for responsive design */
+	.hide-mobile {
+		@media (max-width: 480px) {
+			display: none;
+		}
+	}
+
+	.hide-tablet {
+		@media (max-width: 768px) {
+			display: none;
+		}
+	}
+
+	.show-mobile {
+		display: none;
+		@media (max-width: 480px) {
+			display: block;
+		}
+	}
+
+	/* Flexbox utilities */
+	.flex {
+		display: flex;
+	}
+
+	.flex-col {
+		flex-direction: column;
+	}
+
+	.items-center {
+		align-items: center;
+	}
+
+	.justify-center {
+		justify-content: center;
+	}
+
+	.flex-wrap {
+		flex-wrap: wrap;
+	}
+
+	/* Spacing utilities */
+	.gap-sm { gap: var(--spacing-sm); }
+	.gap-md { gap: var(--spacing-md); }
+	.gap-lg { gap: var(--spacing-lg); }
+
+	/* Margin utilities */
+	.m-auto { margin: auto; }
+	.mx-auto { margin-left: auto; margin-right: auto; }
+	.my-auto { margin-top: auto; margin-bottom: auto; }
+
+	/* Padding utilities */
+	.p-sm { padding: var(--spacing-sm); }
+	.p-md { padding: var(--spacing-md); }
+	.p-lg { padding: var(--spacing-lg); }
+</style>
+
+
+
+
