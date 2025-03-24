@@ -1,20 +1,22 @@
 ---
-// Obtener todas las imágenes de la galería
-const galleryImages = await Astro.glob('/public/gallery/*').catch(() => []);
+const galleryImages = import.meta.glob('../assets/gallery/*.{jpg,jpeg,png,gif,webp}', { eager: true });
 
 interface ImageInfo {
     src: string;
-    alt: string;
     width: number;
     height: number;
+    format: string;
 }
 
-// Función para obtener las dimensiones de la imagen
-function getImageDimensions(path: string): Promise<{ width: number; height: number }> {
-
-    return Promise.resolve({ width: 800, height: 600 });
-}
-
+const images = await Promise.all(
+    Object.values(galleryImages).map(async (file) => {
+        const module = file;
+        return (module as { default: ImageInfo }).default;
+    })
+).catch((error: Error) => {
+    console.error('Error loading gallery images:', error);
+    return [];
+});
 ---
 
 <section id="galeria" class="gallery-section">
@@ -22,13 +24,15 @@ function getImageDimensions(path: string): Promise<{ width: number; height: numb
         <h2 class="section-title">Galería</h2>
         
         <div class="gallery-grid">
-            {galleryImages.map((image, index) => (
-                <div class="gallery-item" data-image={image.src}>
+            {images.map((image) => (
+                <div class="gallery-item">
                     <img 
-                        src={`/gallery/${image.src}`}
-                        alt={`Dúo Girasol - Imagen ${index + 1}`}
+                        src={image.src}
+                        alt={`Dúo Girasol - Imagen`}
                         loading="lazy"
                         class="gallery-image"
+                        width={image.width}
+                        height={image.height}
                     />
                 </div>
             ))}
@@ -169,11 +173,14 @@ function getImageDimensions(path: string): Promise<{ width: number; height: numb
 
     function openModal(index: number) {
         currentImageIndex = index;
-        const imageSrc = galleryItems[index].getAttribute('data-image');
-        if (modal && modalImage && imageSrc) {
-            modalImage.src = `/gallery/${imageSrc}`;
-            modalImage.alt = `Dúo Girasol - Imagen ${index + 1}`;
-            modal.classList.add('active');
+        const galleryItem = galleryItems[index];
+        if (modal && modalImage && galleryItem) {
+            const imageSrc = galleryItem.querySelector('img')?.src;
+            if (imageSrc) {
+                modalImage.src = imageSrc;
+                modalImage.alt = `Dúo Girasol - Imagen ${index + 1}`;
+                modal.classList.add('active');
+            }
         }
     }
 
@@ -213,3 +220,6 @@ function getImageDimensions(path: string): Promise<{ width: number; height: numb
         if (e.target === modal) closeModal();
     });
 </script>
+
+
+
