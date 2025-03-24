@@ -15,8 +15,8 @@ const navItems: NavItem[] = [
 ---
 
 
+<div class="nav-trigger-zone"></div>
 <nav class="navbar nav-hidden">
-    <div class="nav-peek"></div>
     <div class="nav-content">
         <Logo className="navbar-logo" />
         
@@ -45,22 +45,19 @@ const navItems: NavItem[] = [
 
 
 <style>
-    .nav-peek {
+    .nav-trigger-zone {
         position: fixed;
         top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 170px; /* Ancho del logo */
-        height: 15px; /* Altura de la "puntica" visible */
-        background: var(--sunflower-brown);
-        border-radius: 0 0 15px 15px;
-        z-index: 999;
-        cursor: pointer;
+        left: 0;
+        width: 100%;
+        height: 20px;
+        z-index: 998;
     }
 
+    /* Asegurarnos que el navbar tenga la posición inicial correcta */
     .navbar {
         position: fixed;
-        top: -100%;
+        top: 0; /* Cambiado de -100% a 0 */
         left: 0;
         width: 100%;
         background: rgba(var(--bg-primary), 0.95);
@@ -68,11 +65,18 @@ const navItems: NavItem[] = [
         -webkit-backdrop-filter: blur(10px);
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         z-index: 1000;
+        transform: translateY(-100%); /* Posición inicial oculta */
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    /* Clase que muestra el navbar */
     .navbar.nav-visible {
-        transform: translateY(100%);
+        transform: translateY(0); /* Cambiado de translateY(100%) a translateY(0) */
+    }
+
+    /* Clase que oculta el navbar */
+    .navbar.nav-hidden {
+        transform: translateY(-100%);
     }
 
     /* Estilo especial cuando está sobre la imagen del hero */
@@ -104,7 +108,6 @@ const navItems: NavItem[] = [
     .navbar.nav-hidden .nav-links,
     .navbar.nav-hidden .mobile-menu-button {
         transform: translateY(-100%);
-        opacity: 0;
     }
 
     .navbar.nav-hidden .logo-container {
@@ -263,42 +266,72 @@ const navItems: NavItem[] = [
 
 
 <script>
+    // Debugging inicial
+    // console.log('Script iniciado');
+
     let hideTimeout: number;
     const navbar = document.querySelector('.navbar');
-    const navPeek = document.querySelector('.nav-peek');
-    const HIDE_DELAY = 4000; // 4 segundos
+    const navTriggerZone = document.querySelector('.nav-trigger-zone');
+    const HIDE_DELAY = 4000;
     let lastScroll = 0;
     const delta = 5;
     const navbarHeight = (navbar as HTMLElement)?.offsetHeight || 0;
 
+    // Verificar que los elementos se seleccionaron correctamente
+    // console.log('Elementos seleccionados:', {
+    //     navbar: navbar !== null,
+    //     navPeek: navPeek !== null,
+    //     navTriggerZone: navTriggerZone !== null,
+    //     navbarHeight
+    // });
+
     function showNavbar() {
+        // console.log('Mostrando navbar');
         navbar?.classList.add('nav-visible');
         navbar?.classList.remove('nav-hidden');
         clearTimeout(hideTimeout);
     }
 
     function hideNavbar() {
+        // console.log('Ocultando navbar');
         navbar?.classList.remove('nav-visible');
         navbar?.classList.add('nav-hidden');
     }
 
     function scheduleHideNavbar() {
+        // console.log('Programando ocultamiento del navbar');
         clearTimeout(hideTimeout);
         hideTimeout = setTimeout(() => {
-            if (!navbar?.matches(':hover')) {
+            // console.log('Verificando condiciones antes de ocultar:', {
+            //     navbarHover: navbar?.matches(':hover'),
+            //     triggerZoneHover: navTriggerZone?.matches(':hover')
+            // });
+            if (!navbar?.matches(':hover') && !navTriggerZone?.matches(':hover')) {
                 hideNavbar();
             }
         }, HIDE_DELAY);
     }
 
-    // Mostrar navbar al hacer hover en la puntica
-    navPeek?.addEventListener('mouseenter', showNavbar);
+    // Event Listeners con debugging
+    navTriggerZone?.addEventListener('mouseenter', () => {
+        // console.log('Mouse entró en zona trigger');
+        showNavbar();
+    });
 
-    // Mostrar navbar al hacer hover en la barra completa
-    navbar?.addEventListener('mouseenter', showNavbar);
+    navTriggerZone?.addEventListener('mouseleave', () => {
+        // console.log('Mouse salió de zona trigger');
+        scheduleHideNavbar();
+    });
 
-    // Programar ocultamiento al salir del navbar
-    navbar?.addEventListener('mouseleave', scheduleHideNavbar);
+    navbar?.addEventListener('mouseenter', () => {
+        // console.log('Mouse entró en navbar');
+        showNavbar();
+    });
+
+    navbar?.addEventListener('mouseleave', () => {
+        // console.log('Mouse salió de navbar');
+        scheduleHideNavbar();
+    });
 
     // Smooth scroll para los enlaces del navbar
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
